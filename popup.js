@@ -13,31 +13,14 @@ function msToTime(s) {
     return hrs + ':' + mins + ':' + secs;
 }
 
-function sortUrls(urls) {
-    if (urls == null)
-        return [];
-
-	// Create items array
-	var items = Object.keys(urls).map(function(key) {
-		return [key, urls[key]];
-	});
-
-	// Sort the array based on the second element
-	items.sort(function(first, second) {
-		return second[1] - first[1];
-	});
-
-    return items;
-}
-
-function getFormattedTable(items) {
+function getFormattedTable(topUrls) {
     var table_rows = "";
-	for (var i = 0; i < Math.min(7, items.length); i++) {
-		var url = items[i];
+	for (var i = 0; i < topUrls.length; i++) {
+		var url = topUrls[i];
         var url_cell = "<a href=http://" + url[0] + " target=\"_blank\">" + url[0] + "</a>";
 		table_rows += "<tr><td id=\"url\" class=\"mdl-data-table__cell--non-numeric\">" + url_cell + "</td><td>" + msToTime(url[1]) + "</td></tr>";
 	}
-    if (items.length == 0)
+    if (topUrls.length == 0)
         table_rows = "No pages visited yet";
 
     return table_rows;
@@ -45,9 +28,6 @@ function getFormattedTable(items) {
 
 document.addEventListener('DOMContentLoaded', function () {
 	var bg = chrome.extension.getBackgroundPage();
-	bg.updateCurrentTime();
-	var urls = bg.urls;
-
-	var items = sortUrls(urls);
-	document.getElementById("top_urls").innerHTML = getFormattedTable(items);
+	var topUrls = bg.getTopUrls();
+	document.getElementById("top_urls").innerHTML = getFormattedTable(topUrls);
 });
