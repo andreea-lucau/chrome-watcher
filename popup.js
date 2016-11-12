@@ -28,6 +28,6 @@ function getFormattedTable(topUrls) {
 
 document.addEventListener('DOMContentLoaded', function () {
 	var bg = chrome.extension.getBackgroundPage();
-	var topUrls = bg.getTopUrls();
+    var topUrls = bg.getTopUrls();
 	document.getElementById("top_urls").innerHTML = getFormattedTable(topUrls);
 });

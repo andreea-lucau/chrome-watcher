@@ -4,29 +4,6 @@ var currentDay = null;
 var startTime = null;
 const MAX_TOP_URLS = 7;
 
-function getTopUrls() {
-    updateCurrentTime();
-	var items = sortUrls(urls);
-    return items.slice(0, Math.Min(MAX_TOP_URLS, items.length));
-}
-
-function sortUrls(urls) {
-    if (urls == null)
-        return [];
-
-	// Create items array
-	var items = Object.keys(urls).map(function(key) {
-		return [key, urls[key]];
-	});
-
-	// Sort the array based on the second element
-	items.sort(function(first, second) {
-		return second[1] - first[1];
-	});
-
-    return items;
-}
-
 function resetDay(d) {
     var today = d.getDay();
 
@@ -106,3 +83,26 @@ function tabActivated(activeInfo) {
 
 chrome.tabs.onActivated.addListener(tabActivated);
 chrome.tabs.onUpdated.addListener(tabUpdated);
+
+function sortUrls() {
+    if (urls == null)
+        return [];
+
+	// Create items array
+	var items = Object.keys(urls).map(function(key) {
+		return [key, urls[key]];
+	});
+
+	// Sort the array based on the second element
+	items.sort(function(first, second) {
+		return second[1] - first[1];
+	});
+
+    return items;
+}
+
+function getTopUrls() {
+    updateCurrentTime();
+    var topUrls = sortUrls();
+    return topUrls.slice(0, Math.min(MAX_TOP_URLS, topUrls.length));
+}
