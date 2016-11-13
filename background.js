@@ -56,7 +56,6 @@ function updateUrls(url) {
 
     url = getCanonicalUrl(url);
     if (currentUrl === url) {
-        updateCurrentTime();
         return;
     }
 
