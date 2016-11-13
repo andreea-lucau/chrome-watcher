@@ -8,10 +8,11 @@ var MAX_TOP_URLS = 7;
 
 
 function resetWindowData() {
+    "use strict";
     urls = {};
-	currentUrl = null;
-	currentTabId = null;
-	startTime = null;
+    currentUrl = null;
+    currentTabId = null;
+    startTime = null;
 }
 
 function resetDay(d) {
@@ -25,6 +26,7 @@ function resetDay(d) {
 }
 
 function getCanonicalUrl(url) {
+    "use strict";
     var parser = document.createElement("a");
     parser.href = url;
     return parser.hostname;
@@ -74,7 +76,7 @@ function updateUrls(url) {
 
 function tabUpdated(tabId, changeInfo, tab) {
     "use strict";
-    if (tabId == currentTabId && tab.url !== null) {
+    if (tabId === currentTabId && tab.url !== null) {
         updateUrls(tab.url);
     }
 }
@@ -86,25 +88,25 @@ function tabActivated(activeInfo) {
     });
 }
 
-function checkBrowserFocus(){
-    chrome.windows.getCurrent(function(browser){
-		if (!browser.focused && currentFocus) {
+function checkBrowserFocus() {
+    chrome.windows.getCurrent(function (browser) {
+        if (!browser.focused && currentFocus) {
             updateCurrentTime();
             currentFocus = false;
-		} else if (browser.focused && !currentFocus) {
+        } else if (browser.focused && !currentFocus) {
             currentFocus = true;
-            if (startTime != null) {
+            if (startTime !== null) {
                 var d = new Date();
                 var now = d.getTime();
                 startTime = now;
             }
         }
-    })
+    });
 }
 
 chrome.tabs.onActivated.addListener(tabActivated);
 chrome.tabs.onUpdated.addListener(tabUpdated);
-window.setInterval(checkBrowserFocus, 1000);  
+window.setInterval(checkBrowserFocus, 1000);
 
 function sortUrls() {
     "use strict";
