@@ -1,24 +1,27 @@
 var urls = {};
 var currentUrl = null;
+var currentTabId = null;
+var currentFocus = true;
 var currentDay = null;
 var startTime = null;
 var MAX_TOP_URLS = 7;
+
+
+function resetWindowData() {
+    urls = {};
+	currentUrl = null;
+	currentTabId = null;
+	startTime = null;
+}
 
 function resetDay(d) {
     "use strict";
     var today = d.getDay();
 
-    if (currentDay === null) {
-        currentDay = today;
-        return;
+    if (currentDay !== null && currentDay !== today) {
+        resetWindowData();
     }
-
-    if (currentDay !== today) {
-        urls = {};
-        currentUrl = null;
-        startTime = null;
-        currentDay = today;
-    }
+    currentDay = today;
 }
 
 function getCanonicalUrl(url) {
@@ -63,28 +66,45 @@ function updateUrls(url) {
         var d = new Date();
         var now = d.getTime();
         startTime = now;
-        currentUrl = url;
-        return;
+    } else {
+        updateCurrentTime();
     }
-    updateCurrentTime();
     currentUrl = url;
 }
 
 function tabUpdated(tabId, changeInfo, tab) {
     "use strict";
-    if (tab.url !== null) {
+    if (tabId == currentTabId && tab.url !== null) {
         updateUrls(tab.url);
     }
 }
 
 function tabActivated(activeInfo) {
     chrome.tabs.get(activeInfo.tabId, function (tab) {
+        currentTabId = activeInfo.tabId;
         updateUrls(tab.url);
     });
 }
 
+function checkBrowserFocus(){
+    chrome.windows.getCurrent(function(browser){
+		if (!browser.focused && currentFocus) {
+            updateCurrentTime();
+            currentFocus = false;
+		} else if (browser.focused && !currentFocus) {
+            currentFocus = true;
+            if (startTime != null) {
+                var d = new Date();
+                var now = d.getTime();
+                startTime = now;
+            }
+        }
+    })
+}
+
 chrome.tabs.onActivated.addListener(tabActivated);
 chrome.tabs.onUpdated.addListener(tabUpdated);
+window.setInterval(checkBrowserFocus, 1000);  
 
 function sortUrls() {
     "use strict";
