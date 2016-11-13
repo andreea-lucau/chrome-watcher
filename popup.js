@@ -1,16 +1,6 @@
-function msToTime(s) {
-    var ms = s % 1000;
-    s = (s - ms) / 1000;
-    var secs = s % 60;
-    s = (s - secs) / 60;
-    var mins = s % 60;
-    var hrs = (s - mins) / 60;
-    if (secs < 10)
-        secs = '0' + secs;
-    if (mins < 10)
-        mins = '0' + mins;
-
-    return hrs + ':' + mins + ':' + secs;
+function msToTime(ms) {
+    var date = new Date(ms);
+    return date.toISOString().substr(11, 8);
 }
 
 function getFormattedTable(topUrls) {
@@ -26,7 +16,7 @@ function getFormattedTable(topUrls) {
     return table_rows;
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
 	var bg = chrome.extension.getBackgroundPage();
     var topUrls = bg.getTopUrls();
 	document.getElementById("top_urls").innerHTML = getFormattedTable(topUrls);
