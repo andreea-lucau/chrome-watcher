@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
 
-    "name": "Chrome Watcher",
-    "description": "This extension keeps track of how much time you spend on websites",
-    "version": "1.0",
+    "name": "Web Time Tracker",
+    "description": "This extension keeps track of how much time you spend on websites.",
+    "version": "0.1",
 
     "background": {
         "scripts": ["background.js"]
@@ -11,7 +11,7 @@
 
     "browser_action": {
         "default_icon": "icon48.png",
-        "default_title": "What's my time?",
+        "default_title": "Where did my time go?",
         "default_popup": "popup.html"
     },
 
